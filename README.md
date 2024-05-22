@@ -19,9 +19,7 @@ CLI app for showing TOTP codes from an Aegis vault file (like from the backup fi
 ### Installation
 The easiest way to install `aegis-cli` is by using [cargo](https://crates.io/):
 
-```sh
-cargo install --git https://github.com/pepa65/aegis-cli --tag latest
-```
+`cargo install --git https://github.com/pepa65/aegis-cli`
 
 ### Launching Aegis-cli with an Aegis vault file
 To start `aegis-cli`, simply pass the path to your backup file as an argument and enter the password when prompted.
@@ -60,7 +58,7 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis v1.0.1 - Show TOTPs from Aegis vault
+aegis-cli v1.0.3 - Show TOTPs from Aegis vault
 
 Usage: aegis [OPTIONS] <VAULT_FILE>
 

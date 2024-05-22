@@ -14,7 +14,7 @@ use aegis_vault_utils::{
 #[derive(Parser)]
 #[clap(
     name = "aegis-cli",
-    about = format!("{}{} - {}", "aegis v".bold().underline(), crate_version!().bold().underline(), "Show TOTPs from Aegis vault on CLI".bold()),
+    about = format!("{}{} - {}", "aegis-cli v".bold().underline(), crate_version!().bold().underline(), "Show TOTPs from Aegis vault on CLI".bold()),
     version = crate_version!()
 )]
 struct Cli {
