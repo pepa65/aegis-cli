@@ -5,15 +5,16 @@
 # aegis-cli
 **Show TOTPs from Aegis vault on CLI**
 
-CLI app for showing TOTP codes from an Aegis vault file (like from the backup file from the Aegis Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis)).
+CLI app for showing TOTP codes from an Aegis vault file (like from the backup file from the Aegis Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis)). After [aegis-rs](https://github.com/Granddave/aegis-rs).
 
 ## Features
-- Decryption of the 256 bit AES-GCM encrypted vault 🔓
-- Fuzzy selection 🔍
-- TOTP display 🕒
-- Time left indication ⏳
-- Clipboard support 📋
-- Optional JSON output to stdout 📜
+* Decryption of the 256 bit AES-GCM encrypted vault 🔓
+* Fuzzy selection 🔍
+* TOTP display 🕒
+* Clears the screen when done
+* Time left indication ⏳
+* Clipboard support 📋
+* Optional JSON output to stdout 📜
 
 ## Usage
 ### Installation
@@ -58,7 +59,7 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli v1.0.3 - Show TOTPs from Aegis vault
+aegis-cli v1.0.4 - Show TOTPs from Aegis vault
 
 Usage: aegis [OPTIONS] <VAULT_FILE>
 

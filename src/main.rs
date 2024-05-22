@@ -147,9 +147,7 @@ fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
             6..=15 => Style::new().yellow(),
             _ => Style::new().green(),
         };
-        let line = style
-            .bold()
-            .apply_to(format!("{} ({}s left)", otp_code, remaining_time));
+        let line = style.bold().apply_to(format!("{} ({}s left)", otp_code, remaining_time));
         term.write_line(line.to_string().as_str())?;
         std::thread::sleep(Duration::from_millis(60));
         term.clear_last_lines(1)?;
@@ -193,8 +191,8 @@ fn fuzzy_select(entries: &[Entry]) -> Result<()> {
             .interact_opt()
         {
             Ok(selection) => selection,
-            Err(_) => {
-                // Exit on error
+            Err(_) => { // Exit on Ctrl-C
+                print!("\x1Bc");
                 exit(1);
             }
         };
@@ -203,8 +201,7 @@ fn fuzzy_select(entries: &[Entry]) -> Result<()> {
                 let entry_info = &entries.get(index).unwrap().info;
                 print_otp_every_second(entry_info)?;
             }
-            None => {
-                // Exit on Escape key
+            None => { // Exit on Escape key
                 exit(0);
             }
         }
