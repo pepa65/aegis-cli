@@ -1,8 +1,10 @@
 use clap::{crate_version, Args, Parser};
 use color_eyre::eyre::{eyre, Result};
-use console::{Style, Term};
+use color_eyre::owo_colors::OwoColorize;
+use console::{Key, Style, Term};
 use dialoguer::{theme::ColorfulTheme, FuzzySelect, Password};
-use std::{env, fs, path::PathBuf, process::exit, time::Duration};
+use std::sync::mpsc::{self, TryRecvError};
+use std::{env, fs, path::PathBuf, process::exit, thread, time::Duration};
 
 use aegis_vault_utils::{
     otp::{calculate_remaining_time, generate_otp, Entry, EntryInfo},
@@ -11,18 +13,18 @@ use aegis_vault_utils::{
 
 #[derive(Parser)]
 #[clap(
-    name = "aegis-rs",
-    about = "OTP generator for Aegis vaults",
+    name = "aegis-cli",
+    about = format!("{}{} - {}", "aegis v".bold().underline(), crate_version!().bold().underline(), "Show OTPs from Aegis vault".bold()),
     version = crate_version!()
 )]
 struct Cli {
-    #[clap(help = "Path to the vault file", env = "AEGIS_VAULT_FILE")]
+    #[clap(help = "Path to Aegis vault file", env = "AEGIS_VAULT_FILE")]
     vault_file: PathBuf,
     #[clap(flatten)]
     password_input: PasswordInput,
-    #[clap(flatten, help = "Filter by issuer name")]
+    #[clap(flatten, help = "Filter by ISSUER")]
     entry_filter: EntryFilter,
-    #[clap(long, help = "Print to stdout in JSON")]
+    #[clap(short, long, help = "Display selected entries in JSON on stdout")]
     json: bool,
 }
 
@@ -32,13 +34,14 @@ struct PasswordInput {
         short,
         long,
         env = "AEGIS_PASSWORD_FILE",
-        help = "Path to the password file"
+        help = "Path to file with the Aegis vault password"
     )]
     password_file: Option<PathBuf>,
     #[clap(
+        short('P'),
         long,
         env = "AEGIS_PASSWORD",
-        help = "Password to unlock vault",
+        help = "PASSWORD to unlock Aegis vault",
         conflicts_with = "password_file",
         hide_env_values = true
     )]
@@ -47,9 +50,9 @@ struct PasswordInput {
 
 #[derive(Args)]
 struct EntryFilter {
-    #[clap(long, help = "Filter by entry issuer")]
+    #[clap(short, long, num_args(1..), help = "Filter by ISSUER")]
     issuer: Option<String>,
-    #[clap(long, help = "Filter by entry name")]
+    #[clap(short, long, num_args(1..), help = "Filter by NAME")]
     name: Option<String>,
 }
 
@@ -86,7 +89,7 @@ impl PasswordGetter for PasswordInput {
                 Ok(password.trim().to_string())
             }
             _ => Password::with_theme(&ColorfulTheme::default())
-                .with_prompt("Insert Aegis Password")
+                .with_prompt("Enter Aegis vault Password")
                 .interact()
                 .map_err(|e| eyre!("Failed to get password: {}", e)),
         }
@@ -96,7 +99,6 @@ impl PasswordGetter for PasswordInput {
 fn set_sigint_hook() {
     ctrlc::set_handler(move || {
         Term::stdout().show_cursor().expect("Showing cursor");
-        exit(0);
     })
     .expect("Setting SIGINT handler");
 }
@@ -104,12 +106,34 @@ fn set_sigint_hook() {
 fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
     let term = Term::stdout();
     term.hide_cursor()?;
+    let (tx, rx) = mpsc::channel();
+    // Spawn a thread to listen for key presses
+    thread::spawn(move || {
+        let term = Term::stdout();
+        loop {
+            if let Ok(key) = term.read_key() {
+                if key == Key::Escape {
+                    let _ = tx.send(());
+                    break;
+                }
+            }
+        }
+    });
 
     let mut clipboard = arboard::Clipboard::new().ok();
     let mut otp_code = String::new();
     let mut last_remaining_time = 0;
 
     loop {
+        match rx.try_recv() {
+            Ok(_) | Err(TryRecvError::Disconnected) => {
+                term.clear_last_lines(1)?;
+                term.show_cursor()?;
+                break;
+            }
+            Err(TryRecvError::Empty) => {}
+        }
+
         let remaining_time = calculate_remaining_time(entry_info)?;
         if last_remaining_time < remaining_time {
             otp_code = generate_otp(entry_info)?;
@@ -127,10 +151,12 @@ fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
             .bold()
             .apply_to(format!("{} ({}s left)", otp_code, remaining_time));
         term.write_line(line.to_string().as_str())?;
-        std::thread::sleep(Duration::from_secs(1));
+        std::thread::sleep(Duration::from_millis(60));
         term.clear_last_lines(1)?;
         last_remaining_time = remaining_time;
     }
+
+    Ok(())
 }
 
 fn entries_to_json(entries: &[Entry]) -> Result<()> {
@@ -154,25 +180,35 @@ fn entries_to_json(entries: &[Entry]) -> Result<()> {
 }
 
 fn fuzzy_select(entries: &[Entry]) -> Result<()> {
+    set_sigint_hook();
     let items: Vec<String> = entries
         .iter()
         .map(|entry| format!("{} ({})", entry.issuer.trim(), entry.name.trim()))
         .collect();
-    set_sigint_hook();
-    let selection = FuzzySelect::with_theme(&ColorfulTheme::default())
-        .items(&items)
-        .default(0)
-        .interact_opt()?;
-    match selection {
-        Some(index) => {
-            let entry_info = &entries.get(index).unwrap().info;
-            print_otp_every_second(entry_info)?;
-        }
-        None => {
-            println!("No selection");
+    loop {
+        let selection = match FuzzySelect::with_theme(&ColorfulTheme::default())
+            .items(&items)
+            .default(0)
+            .clear(true)
+            .interact_opt()
+        {
+            Ok(selection) => selection,
+            Err(_) => {
+                // Exit on error
+                exit(1);
+            }
+        };
+        match selection {
+            Some(index) => {
+                let entry_info = &entries.get(index).unwrap().info;
+                print_otp_every_second(entry_info)?;
+            }
+            None => {
+                // Exit on Escape key
+                exit(0);
+            }
         }
     }
-    Ok(())
 }
 
 fn main() -> Result<()> {
@@ -183,7 +219,7 @@ fn main() -> Result<()> {
     let file_contents = match fs::read_to_string(&args.vault_file) {
         Ok(contents) => contents,
         Err(e) => {
-            eprintln!("Failed to read vault file: {}", e);
+            eprintln!("Failed to read Aegis vault file: {}", e);
             exit(1);
         }
     };
@@ -196,13 +232,13 @@ fn main() -> Result<()> {
             .filter(|e| args.entry_filter.matches(e))
             .collect::<Vec<Entry>>(),
         Err(e) => {
-            eprintln!("Failed to open vault: {}", e);
+            eprintln!("Failed to open Aegis vault: {}", e);
             exit(1);
         }
     };
 
     if entries.is_empty() {
-        println!("Found no matching entries based on filters and supported vault entries");
+        println!("No matching entries based on filters");
         return Ok(());
     }
 

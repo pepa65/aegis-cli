@@ -28,8 +28,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "aegis-rs"
-version = "0.3.1"
+name = "aegis-cli"
+version = "1.0.0"
 dependencies = [
  "aegis-vault-utils",
  "arboard",

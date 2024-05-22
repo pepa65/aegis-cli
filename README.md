@@ -1,100 +1,65 @@
-[![ci](https://github.com/Granddave/aegis-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/Granddave/aegis-rs/actions)
-[![dependency status](https://deps.rs/repo/github/granddave/aegis-rs/status.svg)](https://deps.rs/repo/github/granddave/aegis-rs)
+[![ci](https://github.com/pepa65/aegis-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/pepa65/aegis-rs/actions)
+[![dependency status](https://deps.rs/repo/github/pepa65/aegis-cli/status.svg)](https://deps.rs/repo/github/pepa65/aegis-cli)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-# Aegis 2FA Authenticator CLI
-
-This is a CLI tool for generating OTP codes from a backup vault from the Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis).
-
+# Aegis-vault compatible TOTP display on CLI 
+CLI app for showing TOTP codes from an Aegis vault file (like from the backup file from the Aegis Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis)).
 
 ## Features
-
 - Decryption of the 256 bit AES-GCM encrypted vault 🔓
 - Fuzzy selection 🔍
-- TOTP generation 🕒
+- TOTP display 🕒
 - Time left indication ⏳
 - Clipboard support 📋
-- JSON output to stdout 📜
-
+- Optional JSON output to stdout 📜
 
 ## Getting Started with Aegis-rs
-
 ### Installation
-
-The easiest way to install Aegis-rs is by using [cargo](https://crates.io/):
-
-```sh
-$ cargo install --git https://github.com/Granddave/aegis-rs --tag latest
-```
-
-### Launching Aegis-rs with a Backup File
-
-To start Aegis-rs, simply pass the path to your backup file as an argument and enter password. For example:
+The easiest way to install `aegis-cli` is by using [cargo](https://crates.io/):
 
 ```sh
-$ aegis-rs ~/Documents/aegis-backup-20230512-193110.json
-? Insert Aegis Password › ********
+cargo install --git https://github.com/pepa65/aegis-cli --tag latest
 ```
+
+### Launching Aegis-cli with an Aegis vault file
+To start `aegis-cli`, simply pass the path to your backup file as an argument and enter the password when prompted.
+For example:
+
+`aegis aegis-backup-20230512-193110.json`
+
+? Insert Aegis Password › `********`
 
 ### Searching for an Entry
+Fuzzy finding is supported for quickly locating entries. Type some letters of the entry's name to filter the list.
+Pressing `Esc` exits the app.
 
-Aegis-rs supports fuzzy finding for quickly locating entries. Type a part of the entry's name to filter the list. For instance:
-
-```sh
-› tw
-❯ Twitter (@johndoe)
-  Twitch (johndoe)
-  TeamViewer (johndoe@protonmail.com)
-  Bitwarden (johndoe@protonmail.com)
-```
-
-### Generating an OTP
-
-Aegis-rs allows you to read the OTP directly in the terminal or paste it using the integrated clipboard support. OTPs are regenerated automatically upon expiration. Here the OTP is displayed, including its remaining validity:
-
-```sh
-· Twitter (@johndoe)
-121921 (28s left)
-```
-
+### Displaying the OTP
+After an entry is selected, the TOTP can be copied from the terminal or pasted through the integrated clipboard support.
+TOTPs are updated automatically upon expiration. Pressing `Esc` will go back to the Fuzzy selection screen.
 
 ### Ways to unlock the Vault
+To unlock the Aegis vault `aegis-cli` supports the following methods:
 
-To unlock the Aegis vault Aegis-rs supports the following methods:
-
-1. Password: The password can be passed as an argument or set as an environment variable.
-    - Environment variable: `AEGIS_PASSWORD`
-    - Argument: `--password <PASSWORD>`
-    - Example: `aegis-rs --password hunter2 vault.json`
-2. Password file: A file containing the password to unlock the vault.
-    - Environment variable: `AEGIS_PASSWORD_FILE`
-    - Argument: `--password-file <PASSWORD_FILE>`
-    - Example: `aegis-rs --password-file /path/to/password-file vault.json`
-3. Password prompt: If no password is provided, Aegis-rs will prompt you to enter the password.
-
+1. **Password prompt**: If no password is provided, `aegis-cli` will prompt for a password.
+2. **Password file**: A file containing the password to unlock the Aegis vault:
+  - Environment variable: `AEGIS_PASSWORD_FILE`
+  - Argument: `-p <PASSWORD_FILE>` or `--password-file <PASSWORD_FILE>`
+  - Example: `aegis -p ~/.aegis.pw aegis-vault.json`
+3. **Password**: The password can be passed as an argument or set as an environment variable:
+  - Environment variable: `AEGIS_PASSWORD`
+  - Argument: `-P <PASSWORD>` or `--password <PASSWORD>`
+  - Example: `aegis -P jkhglhkjhkjf aegis-vault.json`
 
 ### Extra flags
-
-- `--issuer <ISSUER>`: Filter entries by entry issuer.
-- `--name <NAME>`: Filter entries by entry name.
-- `--json`: Output the calculated OTPs as JSON.
-
-
-## TODO
-
-- [x] Add password file feature
-- [x] Add countdown timer and refresh TOTP code after timeout
-- [ ] Display digits in groups
-- [x] Add TOTP to clipboard
-- [x] Add CI
+* `-n <NAME>...` or `--name <NAME>...`: Pre-filter entries by entries NAME.
+  - Example: `aegis -n git dave aegis-vault.json`
+* `-i <ISSUER>...` or `--issuer <ISSUER>...`: Pre-filter entries by entries ISSUER.
+* `-j` or `--json`: Output the (filtered) TOTPs as JSON.
 
 ## Project history
-
-This project has been divided into a binary (this repo) and a [vault
+This project has been divided into a CLI binary (this repo) and a [vault
 utility](https://github.com/Granddave/aegis-vault-utils) crate so that other
-projects can utilize the parsing and OTP generation functionalities as well.
-
+projects can utilize the parsing and TOTP generation functionalities as well.
 
 # License
-
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
