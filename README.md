@@ -1,4 +1,4 @@
-[![ci](https://github.com/pepa65/aegis-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/pepa65/aegis-rs/actions)
+[![ci](https://github.com/pepa65/aegis-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/pepa65/aegis-cli/actions)
 [![dependency status](https://deps.rs/repo/github/pepa65/aegis-cli/status.svg)](https://deps.rs/repo/github/pepa65/aegis-cli)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -13,7 +13,7 @@ CLI app for showing TOTP codes from an Aegis vault file (like from the backup fi
 - Clipboard support 📋
 - Optional JSON output to stdout 📜
 
-## Getting Started with Aegis-rs
+## Usage
 ### Installation
 The easiest way to install `aegis-cli` is by using [cargo](https://crates.io/):
 
@@ -54,12 +54,31 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 * `-n <NAME>...` or `--name <NAME>...`: Pre-filter entries by entries NAME.
   - Example: `aegis -n git dave aegis-vault.json`
 * `-i <ISSUER>...` or `--issuer <ISSUER>...`: Pre-filter entries by entries ISSUER.
-* `-j` or `--json`: Output the (filtered) TOTPs as JSON.
+* `-j` or `--json`: Output the (pre-filtered) TOTPs as JSON.
+
+### Help
+```
+aegis v1.0.1 - Show TOTPs from Aegis vault
+
+Usage: aegis [OPTIONS] <VAULT_FILE>
+
+Arguments:
+  <VAULT_FILE>  Path to Aegis vault file [env: AEGIS_VAULT_FILE=]
+
+Options:
+  -p, --password-file <PASSWORD_FILE>  Path to file with the Aegis vault password [env: AEGIS_PASSWORD_FILE=]
+  -P, --password <PASSWORD>            PASSWORD to unlock Aegis vault [env: AEGIS_PASSWORD]
+  -i, --issuer <ISSUER>...             Filter by ISSUER
+  -n, --name <NAME>...                 Filter by NAME
+  -j, --json                           Display (pre-filtered) entries in JSON on stdout
+  -h, --help                           Print help
+  -V, --version                        Print version
+```
 
 ## Project history
 This project has been divided into a CLI binary (this repo) and a [vault
 utility](https://github.com/Granddave/aegis-vault-utils) crate so that other
 projects can utilize the parsing and TOTP generation functionalities as well.
 
-# License
+## License
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.

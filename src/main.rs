@@ -14,7 +14,7 @@ use aegis_vault_utils::{
 #[derive(Parser)]
 #[clap(
     name = "aegis-cli",
-    about = format!("{}{} - {}", "aegis v".bold().underline(), crate_version!().bold().underline(), "Show OTPs from Aegis vault".bold()),
+    about = format!("{}{} - {}", "aegis v".bold().underline(), crate_version!().bold().underline(), "Show TOTPs from Aegis vault".bold()),
     version = crate_version!()
 )]
 struct Cli {
@@ -24,7 +24,7 @@ struct Cli {
     password_input: PasswordInput,
     #[clap(flatten, help = "Filter by ISSUER")]
     entry_filter: EntryFilter,
-    #[clap(short, long, help = "Display selected entries in JSON on stdout")]
+    #[clap(short, long, help = "Display (pre-filtered) entries in JSON on stdout")]
     json: bool,
 }
 
