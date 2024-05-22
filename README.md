@@ -2,7 +2,9 @@
 [![dependency status](https://deps.rs/repo/github/pepa65/aegis-cli/status.svg)](https://deps.rs/repo/github/pepa65/aegis-cli)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-# Aegis-vault compatible TOTP display on CLI 
+# aegis-cli
+**Show TOTPs from Aegis vault on CLI**
+
 CLI app for showing TOTP codes from an Aegis vault file (like from the backup file from the Aegis Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis)).
 
 ## Features
