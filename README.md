@@ -59,7 +59,7 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli v1.0.4 - Show TOTPs from Aegis vault
+aegis-cli v1.0.5 - Show TOTPs from Aegis vault
 
 Usage: aegis [OPTIONS] <VAULT_FILE>
 
