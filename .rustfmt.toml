@@ -1,0 +1,10 @@
+hard_tabs = true
+max_width = 160
+newline_style = "Native"
+reorder_imports = true
+#unstable_features = true
+#imports_granularity = "Module"
+#group_imports = "StdExternalCrate"
+#binop_separator = "Back"
+#reorder_impl_items = true
+#normalize_comments = true

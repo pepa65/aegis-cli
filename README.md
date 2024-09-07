@@ -22,6 +22,13 @@ The easiest way to install `aegis-cli` is by using [cargo](https://crates.io/):
 
 `cargo install --git https://github.com/pepa65/aegis-cli`
 
+#### Static build (avoiding GLIBC incompatibilities)
+```sh
+rustup target add x86_64-unknown-linux-musl
+export RUSTFLAGS='-C target-feature=+crt-static'
+cargo build --release --target=x86_64-unknown-linux-musl
+```
+
 ### Launching Aegis-cli with an Aegis vault file
 To start `aegis-cli`, simply pass the path to your backup file as an argument and enter the password when prompted.
 For example:
@@ -59,7 +66,7 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli v1.0.5 - Show TOTPs from Aegis vault
+aegis-cli v1.0.6 - Show TOTPs from Aegis vault
 
 Usage: aegis [OPTIONS] <VAULT_FILE>
 
