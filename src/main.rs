@@ -1,10 +1,9 @@
-use clap::{crate_version, Args, Parser};
+use clap::{Args, Parser};
 use color_eyre::eyre::{eyre, Result};
-use color_eyre::owo_colors::OwoColorize;
 use console::{Key, Style, Term};
 use dialoguer::{theme::ColorfulTheme, FuzzySelect, Password};
 use std::sync::mpsc::{self, TryRecvError};
-use std::{env, fs, path::PathBuf, process::exit, thread, time::Duration};
+use std::{fs, path::PathBuf, process::exit, thread, time::Duration};
 
 use aegis_vault_utils::{
 	otp::{calculate_remaining_time, generate_otp, Entry, EntryInfo},
@@ -12,11 +11,15 @@ use aegis_vault_utils::{
 };
 
 #[derive(Parser)]
-#[clap(
-	name = "aegis-cli",
-	about = format!("{}{} - {}", "aegis-cli v".bold().underline(), crate_version!().bold().underline(), "Show TOTPs from Aegis vault on CLI".bold()),
-	version = crate_version!()
-)]
+#[command(version, about)]
+#[command(help_template(
+	"\
+{before-help}{name} {version} - {about}
+{usage-heading} {usage}
+{all-args}{after-help}
+"
+))]
+
 struct Cli {
 	#[clap(help = "Path to Aegis vault file", env = "AEGIS_VAULT_FILE")]
 	vault_file: PathBuf,
@@ -176,12 +179,7 @@ fn fuzzy_select(entries: &[Entry]) -> Result<()> {
 	set_sigint_hook();
 	let items: Vec<String> = entries.iter().map(|entry| format!("{} ({})", entry.issuer.trim(), entry.name.trim())).collect();
 	loop {
-		let selection = match FuzzySelect::with_theme(&ColorfulTheme::default())
-			.items(&items)
-			.default(0)
-			.clear(true)
-			.interact_opt()
-		{
+		let selection = match FuzzySelect::with_theme(&ColorfulTheme::default()).items(&items).default(0).clear(true).interact_opt() {
 			Ok(selection) => selection,
 			Err(_) => {
 				// Exit on Ctrl-C

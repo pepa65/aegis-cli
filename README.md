@@ -1,9 +1,15 @@
 [![ci](https://github.com/pepa65/aegis-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/pepa65/aegis-cli/actions)
 [![dependency status](https://deps.rs/repo/github/pepa65/aegis-cli/status.svg)](https://deps.rs/repo/github/pepa65/aegis-cli)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![downloads](https://img.shields.io/crates/d/aegis-cli.svg)](https://crates.io/crates/aegis-cli)
 
-# aegis-cli
+# aegis-cli 1.0.7
 **Show TOTPs from Aegis vault on CLI**
+
+* License: GPLv3.0
+* Authors: github.com/pepa65, github.com/Granddave
+* Repo: https:/github.com/pepa65/aegis-cli
+* After: https://github.com/Granddave/aegis-rs
 
 CLI app for showing TOTP codes from an Aegis vault file (like from the backup file from the Aegis Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis)). After [aegis-rs](https://github.com/Granddave/aegis-rs).
 
@@ -18,15 +24,30 @@ CLI app for showing TOTP codes from an Aegis vault file (like from the backup fi
 
 ## Usage
 ### Installation
-The easiest way to install `aegis-cli` is by using [cargo](https://crates.io/):
+The easiest way to install `aegis-cli` is by using [cargo](https://crates.io/).
+
+#### Cargo from crates.io
+`cargo install aegis-cli`
+
+#### Cargo from git
 
 `cargo install --git https://github.com/pepa65/aegis-cli`
 
 #### Static build (avoiding GLIBC incompatibilities)
-```sh
+```
+git clone https://github.com/pepa65/aegis-cli
+cd aegis-cli
 rustup target add x86_64-unknown-linux-musl
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target=x86_64-unknown-linux-musl
+```
+
+## Install static single-binary
+```
+wget https://github.com/pepa65/aegis-cli/releases/download/1.0.7/aegis
+sudo mv aegis /usr/local/bin
+sudo chown root:root /usr/local/bin/aegis
+sudo chmod +x /usr/local/bin/aegis
 ```
 
 ### Launching Aegis-cli with an Aegis vault file
@@ -66,10 +87,8 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli v1.0.6 - Show TOTPs from Aegis vault
-
+aegis-cli 1.0.7 - Show TOTPs from Aegis vault on CLI
 Usage: aegis [OPTIONS] <VAULT_FILE>
-
 Arguments:
   <VAULT_FILE>  Path to Aegis vault file [env: AEGIS_VAULT_FILE=]
 

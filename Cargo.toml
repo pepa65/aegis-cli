@@ -1,8 +1,15 @@
 [package]
 name = "aegis-cli"
-version = "1.0.6"
+version = "1.0.7"
+description = "Show TOTPs from Aegis vault on CLI"
+keywords = ["cli", "totp", "2fa", "aegis"]
+repository = "https://github.com/pepa/aegis-cli"
 edition = "2021"
 license = "GPL-3.0-or-later"
+
+[[bin]]
+name = "aegis"
+path = "src/main.rs"
 
 [dependencies]
 aegis-vault-utils = "0.5.0"
@@ -15,6 +22,9 @@ dialoguer = { version = "0.11", features = ["fuzzy-select"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
-[[bin]]
-name = "aegis"
-path = "src/main.rs"
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
