@@ -34,6 +34,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
+          targets: x86_64-unknown-linux-musl
           components: rustfmt
       - name: Run Cargo Fmt
         run: cargo fmt --all -- --check
@@ -48,6 +49,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
+          targets: x86_64-unknown-linux-musl
           components: clippy
       - name: Get build cache
         uses: Swatinem/rust-cache@v2
@@ -69,6 +71,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
+          targets: x86_64-unknown-linux-musl
           toolchain: stable
       - name: Get build cache
         uses: Swatinem/rust-cache@v2
