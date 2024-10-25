@@ -181,9 +181,10 @@ fn entries_to_json(entries: &[Entry]) -> Result<()> {
 fn entries_to_url(entries: &[Entry]) {
 	for entry in entries.iter() {
 		let Entry { info, .. } = entry;
-		let Totp(infototp) = info else {panic!("Invalid entry")};
+		let Totp(infototp) = info else { panic!("Invalid entry") };
 		let algo = format!("{:?}", infototp.algo);
-		println!("otpauth://totp/{}?secret={}&digits={}&algorithm={}&period={}&issuer={}",
+		println!(
+			"otpauth://totp/{}?secret={}&digits={}&algorithm={}&period={}&issuer={}",
 			encode(&entry.name),
 			infototp.secret.replace("\"", "").clone(),
 			infototp.digits,
