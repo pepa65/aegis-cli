@@ -17,10 +17,11 @@ CLI app for showing TOTP codes from an Aegis vault file (like from the backup fi
 * Decryption of the 256 bit AES-GCM encrypted vault 🔓
 * Fuzzy selection 🔍
 * TOTP display 🕒
-* Clears the screen when done
+* Clears the screen when done ☐
 * Time left indication ⏳
 * Clipboard support 📋
 * Optional JSON output to stdout 📜
+* Optional URL output to stdout 📜
 
 ## Usage
 ### Installation
@@ -71,7 +72,7 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 1. **Password prompt**: If no password is provided, `aegis-cli` will prompt for a password.
 2. **Password file**: A file containing the password to unlock the Aegis vault:
-  - Environment variable: `AEGIS_PASSWORD_FILE`
+  - Environment variable: `AEGIS_PWFILE`
   - Argument: `-p <PASSWORD_FILE>` or `--password-file <PASSWORD_FILE>`
   - Example: `aegis -p ~/.aegis.pw aegis-vault.json`
 3. **Password**: The password can be passed as an argument or set as an environment variable:
