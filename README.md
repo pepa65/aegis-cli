@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![downloads](https://img.shields.io/crates/d/aegis-cli.svg)](https://crates.io/crates/aegis-cli)
 
-# aegis-cli 1.0.7
+# aegis-cli 1.1.0
 **Show TOTPs from Aegis vault on CLI**
 
 * License: GPLv3.0
@@ -44,7 +44,7 @@ cargo build --release --target=x86_64-unknown-linux-musl
 
 ## Install static single-binary
 ```
-wget https://github.com/pepa65/aegis-cli/releases/download/1.0.7/aegis
+wget https://github.com/pepa65/aegis-cli/releases/download/1.1.0/aegis
 sudo mv aegis /usr/local/bin
 sudo chown root:root /usr/local/bin/aegis
 sudo chmod +x /usr/local/bin/aegis
@@ -87,19 +87,20 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli 1.0.7 - Show TOTPs from Aegis vault on CLI
+aegis-cli 1.1.0 - Show TOTPs from Aegis vault on CLI
 Usage: aegis [OPTIONS] <VAULT_FILE>
 Arguments:
   <VAULT_FILE>  Path to Aegis vault file [env: AEGIS_VAULT_FILE=]
 
 Options:
-  -p, --password-file <PASSWORD_FILE>  Path to file with the Aegis vault password [env: AEGIS_PASSWORD_FILE=]
-  -P, --password <PASSWORD>            PASSWORD to unlock Aegis vault [env: AEGIS_PASSWORD]
-  -i, --issuer <ISSUER>...             Filter by ISSUER
-  -n, --name <NAME>...                 Filter by NAME
-  -j, --json                           Display (pre-filtered) entries in JSON on stdout
-  -h, --help                           Print help
-  -V, --version                        Print version
+  -p, --pwfile <PWFILE>      File with Aegis vault password [env: AEGIS_PWFILE=]
+  -P, --password <PASSWORD>  PASSWORD to unlock Aegis vault [env: AEGIS_PASSWORD]
+  -i, --issuer <ISSUER>...   Filter by ISSUER
+  -n, --name <NAME>...       Filter by NAME
+  -j, --json                 Output entries in JSON
+  -u, --url                  Output entries in URL format
+  -h, --help                 Print help
+  -V, --version              Print version
 ```
 
 ## Project history

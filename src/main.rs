@@ -1,14 +1,15 @@
+use aegis_vault_utils::otp::EntryInfo::Totp;
+use aegis_vault_utils::{
+	otp::{calculate_remaining_time, generate_otp, Entry, EntryInfo},
+	vault::{parse_vault, PasswordGetter},
+};
 use clap::{Args, Parser};
 use color_eyre::eyre::{eyre, Result};
 use console::{Key, Style, Term};
 use dialoguer::{theme::ColorfulTheme, FuzzySelect, Password};
 use std::sync::mpsc::{self, TryRecvError};
 use std::{fs, path::PathBuf, process::exit, thread, time::Duration};
-
-use aegis_vault_utils::{
-	otp::{calculate_remaining_time, generate_otp, Entry, EntryInfo},
-	vault::{parse_vault, PasswordGetter},
-};
+use urlencoding::encode;
 
 #[derive(Parser)]
 #[command(version, about)]
@@ -27,14 +28,16 @@ struct Cli {
 	password_input: PasswordInput,
 	#[clap(flatten, help = "Filter by ISSUER")]
 	entry_filter: EntryFilter,
-	#[clap(short, long, help = "Display (pre-filtered) entries in JSON on stdout")]
+	#[clap(short, long, help = "Output entries in JSON")]
 	json: bool,
+	#[clap(short, long, help = "Output entries in URL format")]
+	url: bool,
 }
 
 #[derive(Args)]
 struct PasswordInput {
-	#[clap(short, long, env = "AEGIS_PASSWORD_FILE", help = "Path to file with the Aegis vault password")]
-	password_file: Option<PathBuf>,
+	#[clap(short, long, env = "AEGIS_PWFILE", help = "File with Aegis vault password")]
+	pwfile: Option<PathBuf>,
 	#[clap(
 		short('P'),
 		long,
@@ -80,7 +83,7 @@ struct CalculatedOtp {
 
 impl PasswordGetter for PasswordInput {
 	fn get_password(&self) -> Result<String> {
-		match (&self.password, &self.password_file) {
+		match (&self.password, &self.pwfile) {
 			(Some(password), None) => Ok(password.clone()),
 			(None, Some(password_file)) => {
 				let password = fs::read_to_string(password_file)?;
@@ -145,7 +148,7 @@ fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
 			6..=15 => Style::new().yellow(),
 			_ => Style::new().green(),
 		};
-		let line = style.bold().apply_to(format!("{} ({}s left)", otp_code, remaining_time));
+		let line = style.bold().apply_to(format!("{} ({}s left) - Esc to exit", otp_code, remaining_time));
 		term.write_line(line.to_string().as_str())?;
 		std::thread::sleep(Duration::from_millis(60));
 		term.clear_last_lines(1)?;
@@ -173,6 +176,22 @@ fn entries_to_json(entries: &[Entry]) -> Result<()> {
 		println!("{}", serde_json::to_string_pretty(&output)?);
 	}
 	Ok(())
+}
+
+fn entries_to_url(entries: &[Entry]) {
+	for entry in entries.iter() {
+		let Entry { info, .. } = entry;
+		let Totp(infototp) = info else {panic!("Invalid entry")};
+		let algo = format!("{:?}", infototp.algo);
+		println!("otpauth://totp/{}?secret={}&digits={}&algorithm={}&period={}&issuer={}",
+			encode(&entry.name),
+			infototp.secret.replace("\"", "").clone(),
+			infototp.digits,
+			algo.to_string().to_uppercase(),
+			infototp.period,
+			encode(&entry.issuer),
+		);
+	}
 }
 
 fn fuzzy_select(entries: &[Entry]) -> Result<()> {
@@ -233,6 +252,8 @@ fn main() -> Result<()> {
 
 	if args.json {
 		entries_to_json(&entries)?;
+	} else if args.url {
+		entries_to_url(&entries);
 	} else {
 		fuzzy_select(&entries)?;
 	}
