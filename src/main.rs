@@ -184,11 +184,11 @@ fn entries_to_url(entries: &[Entry]) {
 		let Totp(infototp) = info else { panic!("Invalid entry") };
 		let algo = format!("{:?}", infototp.algo);
 		println!(
-			"otpauth://totp/{}?secret={}&digits={}&algorithm={}&period={}&issuer={}",
+			"otpauth://totp/{}?secret={}&algorithm={}&digits={}&period={}&issuer={}",
 			encode(&entry.name),
 			infototp.secret.replace("\"", "").clone(),
-			infototp.digits,
 			algo.to_string().to_uppercase(),
+			infototp.digits,
 			infototp.period,
 			encode(&entry.issuer),
 		);

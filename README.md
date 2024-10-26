@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![downloads](https://img.shields.io/crates/d/aegis-cli.svg)](https://crates.io/crates/aegis-cli)
 
-# aegis-cli 1.1.0
+# aegis-cli 1.1.1
 **Show TOTPs from Aegis vault on CLI**
 
 * License: GPLv3.0
@@ -11,7 +11,8 @@
 * Repo: https:/github.com/pepa65/aegis-cli
 * After: https://github.com/Granddave/aegis-rs
 
-CLI app for showing TOTP codes from an Aegis vault file (like from the backup file from the Aegis Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis)). After [aegis-rs](https://github.com/Granddave/aegis-rs).
+CLI app for showing TOTP codes from an Aegis vault file (backup file from the
+Aegis Authenticator Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis)).
 
 ## Features
 * Decryption of the 256 bit AES-GCM encrypted vault 🔓
@@ -25,30 +26,31 @@ CLI app for showing TOTP codes from an Aegis vault file (like from the backup fi
 
 ## Usage
 ### Installation
-The easiest way to install `aegis-cli` is by using [cargo](https://crates.io/).
+#### Download static single-binary
+```
+wget https://github.com/pepa65/aegis-cli/releases/download/1.1.1/aegis
+sudo mv aegis /usr/local/bin
+sudo chown root:root /usr/local/bin/aegis
+sudo chmod +x /usr/local/bin/aegis
+```
 
-#### Cargo from crates.io
+#### Using cargo (rust toolchain)
+If not installed yet, install a **Rust toolchain**, see https://www.rust-lang.org/tools/install
+
+##### Cargo from crates.io
 `cargo install aegis-cli`
 
-#### Cargo from git
+##### Cargo from git
 
 `cargo install --git https://github.com/pepa65/aegis-cli`
 
-#### Static build (avoiding GLIBC incompatibilities)
+##### Cargo static build (avoid GLIBC incompatibilities)
 ```
 git clone https://github.com/pepa65/aegis-cli
 cd aegis-cli
 rustup target add x86_64-unknown-linux-musl
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target=x86_64-unknown-linux-musl
-```
-
-## Install static single-binary
-```
-wget https://github.com/pepa65/aegis-cli/releases/download/1.1.0/aegis
-sudo mv aegis /usr/local/bin
-sudo chown root:root /usr/local/bin/aegis
-sudo chmod +x /usr/local/bin/aegis
 ```
 
 ### Launching Aegis-cli with an Aegis vault file
@@ -59,15 +61,15 @@ For example:
 
 ? Insert Aegis Password › `********`
 
-### Searching for an Entry
+#### Searching for an Entry
 Fuzzy finding is supported for quickly locating entries. Type some letters of the entry's name to filter the list.
 Pressing `Esc` exits the app.
 
-### Displaying the OTP
+#### Displaying the OTP
 After an entry is selected, the TOTP can be copied from the terminal or pasted through the integrated clipboard support.
 TOTPs are updated automatically upon expiration. Pressing `Esc` will go back to the Fuzzy selection screen.
 
-### Ways to unlock the Vault
+#### Ways to unlock the Vault
 To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 1. **Password prompt**: If no password is provided, `aegis-cli` will prompt for a password.
@@ -80,15 +82,17 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
   - Argument: `-P <PASSWORD>` or `--password <PASSWORD>`
   - Example: `aegis -P jkhglhkjhkjf aegis-vault.json`
 
-### Extra flags
+#### Extra flags
 * `-n <NAME>...` or `--name <NAME>...`: Pre-filter entries by entries NAME.
   - Example: `aegis -n git dave aegis-vault.json`
 * `-i <ISSUER>...` or `--issuer <ISSUER>...`: Pre-filter entries by entries ISSUER.
-* `-j` or `--json`: Output the (pre-filtered) TOTPs as JSON.
+* `-j` or `--json`: Output the selected TOTPs as JSON.
+* `-u` or `--uri`: Output the selected TOTPs as otpauth URIs, according to
+  https://datatracker.ietf.org/doc/draft-linuxgemini-otpauth-uri/01/
 
 ### Help
 ```
-aegis-cli 1.1.0 - Show TOTPs from Aegis vault on CLI
+aegis-cli 1.1.1 - Show TOTPs from Aegis vault on CLI
 Usage: aegis [OPTIONS] <VAULT_FILE>
 Arguments:
   <VAULT_FILE>  Path to Aegis vault file [env: AEGIS_VAULT_FILE=]
@@ -98,8 +102,8 @@ Options:
   -P, --password <PASSWORD>  PASSWORD to unlock Aegis vault [env: AEGIS_PASSWORD]
   -i, --issuer <ISSUER>...   Filter by ISSUER
   -n, --name <NAME>...       Filter by NAME
-  -j, --json                 Output entries in JSON
-  -u, --url                  Output entries in URL format
+  -j, --json                 Output entries in plain JSON
+  -u, --uri                  Output entries in optauth URI format
   -h, --help                 Print help
   -V, --version              Print version
 ```
