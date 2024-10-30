@@ -102,8 +102,9 @@ To unlock the Aegis vault, `aegis-cli` supports the following methods:
 * `-n <NAME>...` or `--name <NAME>...`: Pre-filter entries by entries NAME.
   - Example: `aegis -n git dave aegis-vault.json`
 * `-i <ISSUER>...` or `--issuer <ISSUER>...`: Pre-filter entries by entries ISSUER.
-* `-j` or `--json`: Output the selected TOTPs as JSON.
-* `-u` or `--uri`: Output the selected TOTPs as otpauth URIs, according to
+* `-o` or `--otp`: Output selected OPTs as plain text.
+* `-j` or `--json`: Output selected entries as JSON.
+* `-u` or `--uri`: Output selected entries as otpauth URIs, according to
   https://datatracker.ietf.org/doc/draft-linuxgemini-otpauth-uri/01/
 
 ### Help
