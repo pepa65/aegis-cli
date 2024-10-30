@@ -181,7 +181,7 @@ fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
 
 fn entries_otp(entries: &[Entry]) -> Result<()> {
 	let mut remaining = 0;
-	entries.into_iter().for_each(|entry| {
+	entries.iter().for_each(|entry| {
 		println!("{}  {}:{}", generate_otp(&entry.info).unwrap(), entry.issuer.clone(), entry.name.clone(),);
 		remaining = calculate_remaining_time(&entry.info).unwrap();
 	});
