@@ -1,9 +1,9 @@
 [package]
 name = "aegis-cli"
-version = "1.2.0"
+version = "1.2.1"
 description = "Show TOTPs from Aegis vault on CLI"
 keywords = ["cli", "totp", "2fa", "aegis"]
-repository = "https://github.com/pepa/aegis-cli"
+repository = "https://github.com/pepa65/aegis-cli"
 edition = "2021"
 license = "GPL-3.0-or-later"
 
