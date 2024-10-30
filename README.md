@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![downloads](https://img.shields.io/crates/d/aegis-cli.svg)](https://crates.io/crates/aegis-cli)
 
-# aegis-cli 1.1.1
+# aegis-cli 1.2.0
 **Show TOTPs from Aegis vault on CLI**
 
 * License: GPLv3.0
@@ -24,27 +24,26 @@ Aegis Authenticator Android app [Aegis Authenticator](https://github.com/beemdev
 * Optional JSON output to stdout 📜
 * Optional URL output to stdout 📜
 
-## Usage
-### Installation
-#### Download static single-binary
+## Installation
+### Download static single-binary
 ```
-wget https://github.com/pepa65/aegis-cli/releases/download/1.1.1/aegis
+wget https://github.com/pepa65/aegis-cli/releases/download/1.2.0/aegis
 sudo mv aegis /usr/local/bin
 sudo chown root:root /usr/local/bin/aegis
 sudo chmod +x /usr/local/bin/aegis
 ```
 
-#### Using cargo (rust toolchain)
+### Using cargo (rust toolchain)
 If not installed yet, install a **Rust toolchain**, see https://www.rust-lang.org/tools/install
 
-##### Cargo from crates.io
+### Cargo from crates.io
 `cargo install aegis-cli`
 
-##### Cargo from git
+#### Cargo from git
 
 `cargo install --git https://github.com/pepa65/aegis-cli`
 
-##### Cargo static build (avoid GLIBC incompatibilities)
+#### Cargo static build (avoid GLIBC incompatibilities)
 ```
 git clone https://github.com/pepa65/aegis-cli
 cd aegis-cli
@@ -53,6 +52,23 @@ export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target=x86_64-unknown-linux-musl
 ```
 
+## Install with cargo-binstall
+Even without a full Rust toolchain, rust binaries can be installed with the static binary `cargo-binstall`:
+
+```
+# Install cargo-binstall for Linux x86_64
+# (Other versions are available at https://crates.io/crates/cargo-binstall)
+wget github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz
+tar xf cargo-binstall-x86_64-unknown-linux-musl.tgz
+sudo chown root:root cargo-binstall
+sudo mv cargo-binstall /usr/local/bin/
+```
+
+Only a linux-x86_64 (musl) binary available: `cargo-binstall aegis-cli`
+
+Then `aegis` will be installed in `~/.cargo/bin/` which will need to be added to `PATH`!
+
+## Usage
 ### Launching Aegis-cli with an Aegis vault file
 To start `aegis-cli`, simply pass the path to your backup file as an argument and enter the password when prompted.
 For example:
@@ -70,7 +86,7 @@ After an entry is selected, the TOTP can be copied from the terminal or pasted t
 TOTPs are updated automatically upon expiration. Pressing `Esc` will go back to the Fuzzy selection screen.
 
 #### Ways to unlock the Vault
-To unlock the Aegis vault `aegis-cli` supports the following methods:
+To unlock the Aegis vault, `aegis-cli` supports the following methods:
 
 1. **Password prompt**: If no password is provided, `aegis-cli` will prompt for a password.
 2. **Password file**: A file containing the password to unlock the Aegis vault:
@@ -92,18 +108,20 @@ To unlock the Aegis vault `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli 1.1.1 - Show TOTPs from Aegis vault on CLI
+aegis-cli 1.2.0 - Show TOTPs from Aegis vault on CLI
 Usage: aegis [OPTIONS] <VAULT_FILE>
 Arguments:
-  <VAULT_FILE>  Path to Aegis vault file [env: AEGIS_VAULT_FILE=]
+  <VAULT_FILE>  Encrypted Aegis Vault JSON file (separate it from name/issuer
+                filters by putting -- before it [env: AEGIS_VAULT_FILE=]
 
 Options:
-  -p, --pwfile <PWFILE>      File with Aegis vault password [env: AEGIS_PWFILE=]
-  -P, --password <PASSWORD>  PASSWORD to unlock Aegis vault [env: AEGIS_PASSWORD]
-  -i, --issuer <ISSUER>...   Filter by ISSUER
-  -n, --name <NAME>...       Filter by NAME
-  -j, --json                 Output entries in plain JSON
-  -u, --uri                  Output entries in optauth URI format
+  -o, --otp                  Show OTP entries in plain text
+  -j, --json                 Export entries to Plain Aegis Vault JSON
+  -u, --url                  Export entries in URL format
+  -p, --pwfile <PWFILE>      Aegis Vault passwordfile [env: AEGIS_PWFILE=]
+  -P, --password <PASSWORD>  PASSWORD for Aegis Vault [env: AEGIS_PASSWORD]
+  -i, --issuer <ISSUER>...   Filter by ISSUER (multiple allowed)
+  -n, --name <NAME>...       Filter by NAME (multiple allowed)
   -h, --help                 Print help
   -V, --version              Print version
 ```

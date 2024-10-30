@@ -1,6 +1,6 @@
 [package]
 name = "aegis-cli"
-version = "1.1.1"
+version = "1.2.0"
 description = "Show TOTPs from Aegis vault on CLI"
 keywords = ["cli", "totp", "2fa", "aegis"]
 repository = "https://github.com/pepa/aegis-cli"
@@ -10,6 +10,14 @@ license = "GPL-3.0-or-later"
 [[bin]]
 name = "aegis"
 path = "src/main.rs"
+
+[package.metadata.binstall]
+pkg-url = "{repo}/releases/download/{version}/aegis"
+pkg-fmt = "bin"
+target = "x86_64-unknown-linux-musl"
+disabled-strategies = ["quick-install", "compile"]
+target-family = "Linux"
+target-arch = "X86_64"
 
 [dependencies]
 aegis-vault-utils = "0.5.0"

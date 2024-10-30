@@ -22,27 +22,33 @@ use urlencoding::encode;
 ))]
 
 struct Cli {
-	#[clap(help = "Path to Aegis vault file", env = "AEGIS_VAULT_FILE")]
+	#[clap(
+		help = "Encrypted Aegis Vault JSON file (separate it from name/issuer
+filters by putting -- before it",
+		env = "AEGIS_VAULT_FILE"
+	)]
 	vault_file: PathBuf,
+	#[clap(short, long, help = "Show OTP entries in plain text")]
+	otp: bool,
+	#[clap(short, long, help = "Export entries to Plain Aegis Vault JSON")]
+	json: bool,
+	#[clap(short, long, help = "Export entries in URL format")]
+	url: bool,
 	#[clap(flatten)]
 	password_input: PasswordInput,
-	#[clap(flatten, help = "Filter by ISSUER")]
+	#[clap(flatten, help = "Filter by ISSUER and/or NAME")]
 	entry_filter: EntryFilter,
-	#[clap(short, long, help = "Output entries in JSON")]
-	json: bool,
-	#[clap(short, long, help = "Output entries in URL format")]
-	url: bool,
 }
 
 #[derive(Args)]
 struct PasswordInput {
-	#[clap(short, long, env = "AEGIS_PWFILE", help = "File with Aegis vault password")]
+	#[clap(short, long, env = "AEGIS_PWFILE", help = "Aegis Vault passwordfile")]
 	pwfile: Option<PathBuf>,
 	#[clap(
 		short('P'),
 		long,
 		env = "AEGIS_PASSWORD",
-		help = "PASSWORD to unlock Aegis vault",
+		help = "PASSWORD for Aegis Vault",
 		conflicts_with = "password_file",
 		hide_env_values = true
 	)]
@@ -51,10 +57,33 @@ struct PasswordInput {
 
 #[derive(Args)]
 struct EntryFilter {
-	#[clap(short, long, num_args(1..), help = "Filter by ISSUER")]
+	#[clap(short, long, num_args(1..), help = "Filter by ISSUER (multiple allowed)")]
 	issuer: Option<String>,
-	#[clap(short, long, num_args(1..), help = "Filter by NAME")]
+	#[clap(short, long, num_args(1..), help = "Filter by NAME (multiple allowed)")]
 	name: Option<String>,
+}
+
+#[derive(Debug, serde::Serialize)]
+struct EntryInfo_ {
+	secret: String,
+	algo: String,
+	digits: i32,
+	period: i32,
+}
+
+#[derive(Debug, serde::Serialize)]
+struct Entry_ {
+	r#type: String,
+	name: String,
+	uuid: Option<String>,
+	issuer: String,
+	note: Option<String>,
+	icon: Option<String>,
+	icon_mime: Option<String>,
+	icon_hash: Option<String>,
+	favorite: bool,
+	info: EntryInfo_,
+	groups: Option<String>,
 }
 
 impl EntryFilter {
@@ -71,14 +100,6 @@ impl EntryFilter {
 		}
 		true
 	}
-}
-
-#[derive(Debug, serde::Serialize)]
-struct CalculatedOtp {
-	issuer: String,
-	name: String,
-	otp: String,
-	remaining_time: i32,
 }
 
 impl PasswordGetter for PasswordInput {
@@ -158,18 +179,37 @@ fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
 	Ok(())
 }
 
+fn entries_otp(entries: &[Entry]) -> Result<()> {
+	let mut remaining = 0;
+	entries.into_iter().for_each(|entry| {
+		println!("{}  {}:{}", generate_otp(&entry.info).unwrap(), entry.issuer.clone(), entry.name.clone(),);
+		remaining = calculate_remaining_time(&entry.info).unwrap();
+	});
+	println!("Remaining: {remaining} s");
+	Ok(())
+}
+
 fn entries_to_json(entries: &[Entry]) -> Result<()> {
-	let output: Vec<CalculatedOtp> = entries
+	let output: Vec<Entry_> = entries
 		.iter()
 		.map(|entry| {
-			Ok(CalculatedOtp {
-				issuer: entry.issuer.clone(),
+			let Entry { info, .. } = entry;
+			let Totp(infototp) = info else { panic!("Invalid entry") };
+			Ok(Entry_ {
+				r#type: "totp".to_string(),
+				uuid: None,
 				name: entry.name.clone(),
-				otp: generate_otp(&entry.info)?,
-				remaining_time: calculate_remaining_time(&entry.info)?,
+				issuer: entry.issuer.clone(),
+				note: None,
+				icon: None,
+				icon_mime: None,
+				icon_hash: None,
+				favorite: false,
+				info: EntryInfo_ { secret: infototp.secret.to_string(), algo: "SHA1".to_string(), digits: infototp.digits, period: infototp.period },
+				groups: None,
 			})
 		})
-		.collect::<Result<Vec<CalculatedOtp>>>()?;
+		.collect::<Result<Vec<Entry_>>>()?;
 	if output.is_empty() {
 		println!("No entries found");
 	} else {
@@ -251,7 +291,9 @@ fn main() -> Result<()> {
 		return Ok(());
 	}
 
-	if args.json {
+	if args.otp {
+		entries_otp(&entries)?;
+	} else if args.json {
 		entries_to_json(&entries)?;
 	} else if args.url {
 		entries_to_url(&entries);
