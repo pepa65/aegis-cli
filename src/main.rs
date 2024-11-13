@@ -111,7 +111,7 @@ impl PasswordGetter for PasswordInput {
 				Ok(password.trim().to_string())
 			}
 			_ => Password::with_theme(&ColorfulTheme::default())
-				.with_prompt("Enter Aegis vault Password")
+				.with_prompt("Enter Aegis Vault Password")
 				.interact()
 				.map_err(|e| eyre!("Failed to get password: {}", e)),
 		}
@@ -194,7 +194,7 @@ fn entries_to_json(entries: &[Entry]) -> Result<()> {
 		.iter()
 		.map(|entry| {
 			let Entry { info, .. } = entry;
-			let Totp(infototp) = info else { panic!("Invalid entry") };
+			let Totp(infototp) = info else { panic!("Invalid entry info") };
 			Ok(Entry_ {
 				r#type: "totp".to_string(),
 				uuid: None,
@@ -268,7 +268,7 @@ fn main() -> Result<()> {
 	let file_contents = match fs::read_to_string(&args.vault_file) {
 		Ok(contents) => contents,
 		Err(e) => {
-			eprintln!("Failed to read Aegis vault file: {}", e);
+			eprintln!("Failed to read Aegis Vault file: {}", e);
 			exit(1);
 		}
 	};
@@ -281,7 +281,7 @@ fn main() -> Result<()> {
 			.filter(|e| args.entry_filter.matches(e))
 			.collect::<Vec<Entry>>(),
 		Err(e) => {
-			eprintln!("Failed to open Aegis vault: {}", e);
+			eprintln!("Failed to open Aegis Vault: {}", e);
 			exit(1);
 		}
 	};
