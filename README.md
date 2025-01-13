@@ -1,9 +1,10 @@
-[![ci](https://github.com/pepa65/aegis-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/pepa65/aegis-cli/actions)
-[![dependency status](https://deps.rs/repo/github/pepa65/aegis-cli/status.svg)](https://deps.rs/repo/github/pepa65/aegis-cli)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![downloads](https://img.shields.io/crates/d/aegis-cli.svg)](https://crates.io/crates/aegis-cli)
+[![CI](https://github.com/pepa65/aegis-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/pepa65/aegis-cli/actions)
+[![Dependencies](https://deps.rs/repo/github/pepa65/aegis-cli/status.svg)](https://deps.rs/repo/github/pepa65/aegis-cli)
+[![Docs](https://img.shields.io/badge/Docs-aegis--cli-blue)](https://docs.rs/crate/aegis-cli/latest)
+[![License](https://img.shields.io/github/license/pepa65/aegis-cli)](https://github.com/pepa65/aegis-cli/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/crates/d/aegis-cli.svg)](https://crates.io/crates/aegis-cli)
 
-# aegis-cli 1.2.2
+# aegis-cli 1.2.3
 **Show TOTPs from Aegis vault on CLI**
 
 * License: GPLv3.0
@@ -27,7 +28,7 @@ Aegis Authenticator Android app [Aegis Authenticator](https://github.com/beemdev
 ## Installation
 ### Download static single-binary
 ```
-wget https://github.com/pepa65/aegis-cli/releases/download/1.2.2/aegis
+wget https://github.com/pepa65/aegis-cli/releases/download/1.2.3/aegis
 sudo mv aegis /usr/local/bin
 sudo chown root:root /usr/local/bin/aegis
 sudo chmod +x /usr/local/bin/aegis
@@ -109,7 +110,7 @@ To unlock the Aegis vault, `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli 1.2.2 - Show TOTPs from Aegis vault on CLI
+aegis-cli 1.2.3 - Show TOTPs from Aegis vault on CLI
 Usage: aegis [OPTIONS] <VAULT_FILE>
 Arguments:
   <VAULT_FILE>  Encrypted Aegis Vault JSON file (separate it from name/issuer

@@ -1,4 +1,4 @@
-name: Continious integration
+name: Continuous integration
 
 on:
   pull_request:

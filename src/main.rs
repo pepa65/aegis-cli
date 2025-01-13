@@ -20,7 +20,6 @@ use urlencoding::encode;
 {all-args}{after-help}
 "
 ))]
-
 struct Cli {
 	#[clap(
 		help = "Encrypted Aegis Vault JSON file (separate it from name/issuer

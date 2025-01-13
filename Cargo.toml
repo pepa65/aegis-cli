@@ -1,11 +1,14 @@
 [package]
 name = "aegis-cli"
-version = "1.2.2"
-description = "Show TOTPs from Aegis vault on CLI"
-keywords = ["cli", "totp", "2fa", "aegis"]
-repository = "https://github.com/pepa65/aegis-cli"
+version = "1.2.3"
 edition = "2021"
+description = "Show TOTPs from Aegis vault on CLI"
+repository = "https://github.com/pepa65/aegis-cli"
+documentation = "https://docs.rs/aegis-cli"
+readme = "README.md"
 license = "GPL-3.0-or-later"
+keywords = ["cli", "totp", "2fa", "aegis"]
+categories = ["command-line-utilities"]
 
 [[bin]]
 name = "aegis"
@@ -20,15 +23,15 @@ target-family = "Linux"
 target-arch = "X86_64"
 
 [dependencies]
-aegis-vault-utils = "0.5.0"
-arboard = "3.2"
-clap = { version = "4.5", features = ["derive", "cargo", "env"] }
-color-eyre = "0.6"
-console = "0.15"
-ctrlc = "3.4"
-dialoguer = { version = "0.11", features = ["fuzzy-select"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+aegis-vault-utils = "0.5.1"
+arboard = "3.4.1"
+clap = { version = "4.5.26", features = ["derive", "cargo", "env"] }
+color-eyre = "0.6.3"
+console = "0.15.10"
+ctrlc = "3.4.5"
+dialoguer = { version = "0.11.0", features = ["fuzzy-select"] }
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.135"
 urlencoding = "2.1.3"
 
 [profile.release]
