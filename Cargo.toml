@@ -1,7 +1,7 @@
 [package]
 name = "aegis-cli"
-version = "1.2.3"
-edition = "2021"
+version = "1.2.4"
+edition = "2024"
 description = "Show TOTPs from Aegis vault on CLI"
 repository = "https://github.com/pepa65/aegis-cli"
 documentation = "https://docs.rs/aegis-cli"

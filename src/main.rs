@@ -1,12 +1,12 @@
 use aegis_vault_utils::otp::EntryInfo::Totp;
 use aegis_vault_utils::{
-	otp::{calculate_remaining_time, generate_otp, Entry, EntryInfo},
-	vault::{parse_vault, PasswordGetter},
+	otp::{Entry, EntryInfo, calculate_remaining_time, generate_otp},
+	vault::{PasswordGetter, parse_vault},
 };
 use clap::{Args, Parser};
-use color_eyre::eyre::{eyre, Result};
+use color_eyre::eyre::{Result, eyre};
 use console::{Key, Style, Term};
-use dialoguer::{theme::ColorfulTheme, FuzzySelect, Password};
+use dialoguer::{FuzzySelect, Password, theme::ColorfulTheme};
 use std::sync::mpsc::{self, TryRecvError};
 use std::{fs, path::PathBuf, process::exit, thread, time::Duration};
 use urlencoding::encode;
@@ -23,7 +23,7 @@ use urlencoding::encode;
 struct Cli {
 	#[clap(
 		help = "Encrypted Aegis Vault JSON file (separate it from name/issuer
-filters by putting -- before it",
+filters by putting -- before it)",
 		env = "AEGIS_VAULT_FILE"
 	)]
 	vault_file: PathBuf,
