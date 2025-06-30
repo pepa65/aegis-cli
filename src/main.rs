@@ -168,7 +168,7 @@ fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
 			6..=15 => Style::new().yellow(),
 			_ => Style::new().green(),
 		};
-		let line = style.bold().apply_to(format!("{} ({}s left) - Esc to exit", otp_code, remaining_time));
+		let line = style.bold().apply_to(format!("{otp_code} ({remaining_time}s left) - Esc to exit"));
 		term.write_line(line.to_string().as_str())?;
 		std::thread::sleep(Duration::from_millis(60));
 		term.clear_last_lines(1)?;
@@ -267,7 +267,7 @@ fn main() -> Result<()> {
 	let file_contents = match fs::read_to_string(&args.vault_file) {
 		Ok(contents) => contents,
 		Err(e) => {
-			eprintln!("Failed to read Aegis Vault file: {}", e);
+			eprintln!("Failed to read Aegis Vault file: {e}");
 			exit(1);
 		}
 	};
@@ -280,7 +280,7 @@ fn main() -> Result<()> {
 			.filter(|e| args.entry_filter.matches(e))
 			.collect::<Vec<Entry>>(),
 		Err(e) => {
-			eprintln!("Failed to open Aegis Vault: {}", e);
+			eprintln!("Failed to open Aegis Vault: {e}");
 			exit(1);
 		}
 	};

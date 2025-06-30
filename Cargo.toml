@@ -28,7 +28,7 @@ aegis-vault-utils = "0.5.1"
 arboard = "3.4.1"
 clap = { version = "4.5.26", features = ["derive", "cargo", "env"] }
 color-eyre = "0.6.3"
-console = "0.15.10"
+console = "0.16"
 ctrlc = "3.4.5"
 dialoguer = { version = "0.11.0", features = ["fuzzy-select"] }
 serde = { version = "1.0.217", features = ["derive"] }
