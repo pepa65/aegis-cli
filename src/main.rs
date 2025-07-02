@@ -3,8 +3,8 @@ use aegis_vault_utils::{
 	otp::{Entry, EntryInfo, calculate_remaining_time, generate_otp},
 	vault::{PasswordGetter, parse_vault},
 };
-use clap::{Args, Parser};
 use clap::builder::styling::{AnsiColor, Effects, Styles};
+use clap::{Args, Parser};
 use color_eyre::eyre::{Result, eyre};
 use console::{Key, Style, Term};
 use dialoguer::{FuzzySelect, Password, theme::ColorfulTheme};
