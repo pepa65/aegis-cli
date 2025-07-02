@@ -4,6 +4,7 @@ use aegis_vault_utils::{
 	vault::{PasswordGetter, parse_vault},
 };
 use clap::{Args, Parser};
+use clap::builder::styling::{AnsiColor, Effects, Styles};
 use color_eyre::eyre::{Result, eyre};
 use console::{Key, Style, Term};
 use dialoguer::{FuzzySelect, Password, theme::ColorfulTheme};
@@ -11,9 +12,18 @@ use std::sync::mpsc::{self, TryRecvError};
 use std::{fs, path::PathBuf, process::exit, thread, time::Duration};
 use urlencoding::encode;
 
+// Cargo's color style: https://github.com/crate-ci/clap-cargo/blob/master/src/style.rs
+const STYLE: Styles = Styles::styled()
+	.header(AnsiColor::Green.on_default().effects(Effects::BOLD))
+	.usage(AnsiColor::Green.on_default().effects(Effects::BOLD))
+	.literal(AnsiColor::Cyan.on_default().effects(Effects::BOLD))
+	.placeholder(AnsiColor::Cyan.on_default())
+	.error(AnsiColor::Red.on_default().effects(Effects::BOLD))
+	.valid(AnsiColor::Cyan.on_default().effects(Effects::BOLD))
+	.invalid(AnsiColor::Yellow.on_default().effects(Effects::BOLD));
+
 #[derive(Parser)]
-#[command(version, about)]
-#[command(help_template(
+#[command(version, about, styles = STYLE, help_template(
 	"\
 {before-help}{name} {version} - {about}
 {usage-heading} {usage}
