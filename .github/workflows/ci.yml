@@ -54,7 +54,7 @@ jobs:
       - name: Get build cache
         uses: Swatinem/rust-cache@v2
       - name: Run clippy
-        run: cargo clippy --all-targets -- -D warnings
+        run: cargo clippy --release --all-targets -- -D warnings
 
   test:
     name: Test

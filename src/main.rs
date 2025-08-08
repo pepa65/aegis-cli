@@ -97,11 +97,13 @@ struct Entry_ {
 
 impl EntryFilter {
 	fn matches(&self, entry: &Entry) -> bool {
+		#[allow(clippy::collapsible_if)]
 		if let Some(issuer) = &self.issuer {
 			if !entry.issuer.to_lowercase().contains(&issuer.to_lowercase()) {
 				return false;
 			}
 		}
+		#[allow(clippy::collapsible_if)]
 		if let Some(name) = &self.name {
 			if !entry.name.to_lowercase().contains(&name.to_lowercase()) {
 				return false;
@@ -142,6 +144,7 @@ fn print_otp_every_second(entry_info: &EntryInfo) -> Result<()> {
 	thread::spawn(move || {
 		let term = Term::stdout();
 		loop {
+			#[allow(clippy::collapsible_if)]
 			if let Ok(key) = term.read_key() {
 				if key == Key::Escape {
 					let _ = tx.send(());
