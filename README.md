@@ -5,7 +5,7 @@
 [![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/pepa65/aegis-cli/blob/main/LICENSE)
 [![downloads](https://img.shields.io/crates/d/aegis-cli.svg)](https://crates.io/crates/aegis-cli)
 
-# aegis-cli 1.3.51
+# aegis-cli 1.3.52
 **Show TOTPs from Aegis vault on CLI**
 
 * License: GPLv3.0
@@ -29,7 +29,7 @@ Aegis Authenticator Android app [Aegis Authenticator](https://github.com/beemdev
 ## Installation
 ### Download static single-binary
 ```
-wget https://github.com/pepa65/aegis-cli/releases/download/1.3.51/aegis
+wget https://github.com/pepa65/aegis-cli/releases/download/1.3.52/aegis
 sudo mv aegis /usr/local/bin
 sudo chown root:root /usr/local/bin/aegis
 sudo chmod +x /usr/local/bin/aegis
@@ -75,7 +75,7 @@ Then `aegis` will be installed in `~/.cargo/bin/` which will need to be added to
 To start `aegis-cli`, simply pass the path to your backup file as an argument and enter the password when prompted.
 For example:
 
-`aegis aegis-backup-20230512-1.3.510.json`
+`aegis aegis-backup-20230512-1.3.520.json`
 
 ? Insert Aegis Password › `********`
 
@@ -111,7 +111,7 @@ To unlock the Aegis vault, `aegis-cli` supports the following methods:
 
 ### Help
 ```
-aegis-cli 1.3.51 - Show TOTPs from Aegis vault on CLI
+aegis-cli 1.3.52 - Show TOTPs from Aegis vault on CLI
 Usage: aegis [OPTIONS] <VAULT_FILE>
 Arguments:
   <VAULT_FILE>  Encrypted Aegis Vault JSON file (separate it from name/issuer
