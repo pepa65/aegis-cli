@@ -2,7 +2,7 @@
 name = "aegis-cli"
 version = "1.3.122"
 edition = "2024"
-rust_version = "1.88.0"
+rust-version = "1.88.0"
 authors = ["github.com/pepa65 <pepa65@passchier.net>"]
 description = "Show TOTPs from Aegis vault on CLI"
 repository = "https://github.com/pepa65/aegis-cli"
